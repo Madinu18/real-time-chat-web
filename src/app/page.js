@@ -1,9 +1,9 @@
 // /src/app/page.js
-"use client"
+"use client";
 import { useState } from 'react';
 import firebase from 'firebase/app';
 import 'firebase/database';
-import 'firebase/auth'; // Import module auth jika diperlukan
+import 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -12,7 +12,6 @@ const firebaseConfig = {
   databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
 };
 
-// Inisialisasi Firebase app jika belum diinisialisasi
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
@@ -23,12 +22,18 @@ const IndexPage = () => {
 
   const buatRuangan = async () => {
     const nomor_random = Math.floor(Math.random() * 1000).toString();
-    const database = firebase.database(); 
-    const ruanganRef = database.ref('chats').child(nomor_random);
+    const database = firebase.database();
+    const ruanganRef = database.ref(`${nomor_random}`); // Menggunakan nomor room sebagai key
 
     const ruanganSnapshot = await ruanganRef.once('value');
     if (!ruanganSnapshot.exists()) {
-      await ruanganRef.set({});
+      // Simpan informasi admin ke dalam ruangan
+      await ruanganRef.set({
+        list: {
+          admin: nama,
+          member: [],
+        },
+      });
 
       // Navigasi ke halaman ruangan dengan nomor_random dan nama pengguna
       window.location.href = `/${nomor_random}?nama=${nama}`;
@@ -38,13 +43,26 @@ const IndexPage = () => {
   };
 
   const masukRuangan = async () => {
-    const database = firebase.database(); 
-    const ruanganRef = database.ref('chats').child(kodeRuangan);
+    const database = firebase.database();
+    const ruanganRef = database.ref(`${kodeRuangan}`);
 
     const ruanganSnapshot = await ruanganRef.once('value');
     if (ruanganSnapshot.exists()) {
+      const listRef = ruanganRef.child('list');
+      const listSnapshot = await listRef.once('value');
+
+      if (listSnapshot.exists()) {
+        // Ambil array member dari snapshot
+        const currentMembers = listSnapshot.val().member || [];
+        // Tambahkan nama pengguna ke array
+        const updatedMembers = [...currentMembers, nama];
+
+        // Update array member di dalam list
+        await listRef.update({ member: updatedMembers });
+      }
+
       // Navigasi ke halaman ruangan dengan kodeRuangan dan nama pengguna
-      window.location.href = `/ruangan/${kodeRuangan}?nama=${nama}`;
+      window.location.href = `/${kodeRuangan}?nama=${nama}`;
     } else {
       console.log('Ruangan tidak ditemukan, mungkin implementasinya disini');
     }
