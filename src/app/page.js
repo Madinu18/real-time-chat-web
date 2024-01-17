@@ -69,19 +69,16 @@ const IndexPage = () => {
   };
 
   return (
-    <div>
-      <label>
-        Nama:
-        <input type="text" value={nama} onChange={(e) => setNama(e.target.value)} />
-      </label>
-      <br />
-      <label>
-        Kode Ruangan:
-        <input type="text" value={kodeRuangan} onChange={(e) => setKodeRuangan(e.target.value)} />
-      </label>
-      <br />
-      <button onClick={buatRuangan}>Buat Ruangan Baru</button>
-      <button onClick={masukRuangan}>Masuk ke Ruangan</button>
+    <div className='bg-[#EEF5FF] flex items-center justify-center h-screen'>
+        <div className='bg-[#86B6F6] w-[30rem] mx-auto flex flex-col p-14 rounded-xl'>
+          <h1 className='text-center text-3xl font-extrabold text-white mb-6'>Real Time Chat Apps</h1>
+          <label className='text-white mb-2 text-xl font-extrabold'>Nama</label>
+          <input className='bg-white text-black mb-4 text-xl rounded-md p-2 font-bold' type="text" value={nama} onChange={(e) => setNama(e.target.value)} />
+          <label className='text-white mb-2 text-xl font-extrabold'>Kode Ruangan</label>
+          <input className='bg-white text-black mb-4 text-xl rounded-md p-2 font-bold' type="text" value={kodeRuangan} onChange={(e) => setKodeRuangan(e.target.value)} />
+          <button className='mb-3 text-xl bg-[#2a9df4] border-2 border-black p-2 rounded-lg text-black font-bold hover:bg-opacity-50' onClick={buatRuangan}>Buat Ruangan Baru</button>
+          <button className='text-xl bg-[#B4D4FF] border-2 border-black p-2 rounded-lg text-black font-bold hover:bg-opacity-50' onClick={masukRuangan}>Masuk ke Ruangan</button>
+        </div>
     </div>
   );
 };
