@@ -218,7 +218,7 @@ const RuanganPage = ({ slug: initialSlug }) => {
 
   // Component rendering
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="h-dvh flex flex-col">
       {/* Navbar */}
       <div className="bg-[#86B6F6] p-6">
         <button

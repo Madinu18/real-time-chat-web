@@ -93,7 +93,7 @@ const IndexPage = () => {
   };
 
   return (
-    <div className="bg-[#EEF5FF] px-5 md:p-14 flex flex-col items-center justify-center min-h-screen">
+    <div className="bg-[#EEF5FF] px-5 md:p-14 flex flex-col items-center justify-center h-dvh">
       <div className="bg-[#86B6F6] w-full md:w-[50rem] mx-auto flex flex-col md:flex-row p-4 md:p-14 rounded-xl justify-center items-center">
         <div className="mx-auto hidden md:flex">
           <div className="grid grid-cols-4 gap-4 mb-4">
@@ -181,7 +181,7 @@ const IndexPage = () => {
             onChange={(e) => setKodeRuangan(e.target.value)}
           />
           <button
-            className="mb-3 md:mb-0 text-base md:text-xl bg-[#2a9df4] border-2 border-black p-2 rounded-lg text-black font-bold hover:bg-opacity-50"
+            className="mb-3 text-base md:text-xl bg-[#2a9df4] border-2 border-black p-2 rounded-lg text-black font-bold hover:bg-opacity-50"
             onClick={buatRuangan}
           >
             Buat Ruangan Baru
