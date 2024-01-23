@@ -7,7 +7,7 @@ const RenderImage = memo(({ index, selectedImage, setSelectedImage }) => {
   return (
     <div
       key={index}
-      className={`w-16 h-16 bg-cover rounded-full border-2 ${
+      className={`w-12 h-12 lg:w-16 lg:h-16 bg-cover rounded-full border-2 ${
         selectedImage === imageNumber
           ? "border-green-500 filter brightness-75"
           : "border-white"
@@ -19,7 +19,7 @@ const RenderImage = memo(({ index, selectedImage, setSelectedImage }) => {
         <div className="flex items-center justify-center text-green-500">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-10 w-10"
+            className="h-8 w-8 lg:h-10 lg:w-10"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"

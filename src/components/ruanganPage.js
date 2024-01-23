@@ -5,6 +5,8 @@ import firebase from "@/function/firebase";
 import {
   ArrowLeftOnRectangleIcon,
   PaperAirplaneIcon,
+  Bars3Icon,
+  XMarkIcon,
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import ConfirmationModal from "./ConfirmationModal";
@@ -23,6 +25,11 @@ const RuanganPage = ({ slug: initialSlug }) => {
   const databaseRef = useRef(firebase.database());
   const [isAdmin, setIsAdmin] = useState(false);
   const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
+  const [navbarOpen, setNavbarOpen] = useState(false);
+
+  const toggleNavbar = () => {
+    setNavbarOpen(!navbarOpen);
+  };
 
   const openConfirmationModal = () => {
     setConfirmationModalOpen(true);
@@ -211,21 +218,41 @@ const RuanganPage = ({ slug: initialSlug }) => {
 
   // Component rendering
   return (
-    <div className="h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col">
+      {/* Navbar */}
       <div className="bg-[#86B6F6] p-6">
+        <button
+          className="btn font-bold absolute top-3 left-3 px-2 md:px-3 md:hidden"
+          onClick={toggleNavbar}
+        >
+          {navbarOpen ? (
+            <XMarkIcon className="w-5 md:h-10" />
+          ) : (
+            <Bars3Icon className="w-5 md:h-10" />
+          )}
+        </button>
         <h1 className="text-white text-xl font-bold flex justify-center text-center">
           Real Time Chat Room: {nomorRuangan}
         </h1>
         <button
-          className="btn btn-error font-bold absolute top-3 right-3"
+          className="btn btn-error font-bold absolute top-3 right-3 px-2 md:px-3"
           onClick={handleLeaveRoom}
         >
-          <ArrowLeftOnRectangleIcon className="h-10" />
-          Leave room
+          <ArrowLeftOnRectangleIcon className="w-5 md:h-10" />
+          <p className="text-base md:text-xl hidden md:inline">Leave room</p>
         </button>
       </div>
-      <div className="flex flex-row h-full">
-        <div className="border-r border-[#86B6F6] w-2/5 flex-grow bg-[#EEF5FF] text-black text-xl">
+      {/* Konten */}
+      <div className="flex flex-col md:flex-row h-full">
+        {/* Sidebar */}
+        <div
+          className={`md:border-r md:border-[#86B6F6] md:w-2/5 bg-[#EEF5FF] text-black text-xl ${
+            navbarOpen
+              ? "absolute inset-y-0 left-0 transform translate-x-0 transition-transform z-50"
+              : "hidden"
+          } md:inline md:z-40`}
+          style={{ marginTop: navbarOpen ? "76px" : "0" }}
+        >
           <ul>
             <li className="border-b border-black p-3 font-bold text-red-500">
               {admin && (
@@ -235,9 +262,9 @@ const RuanganPage = ({ slug: initialSlug }) => {
                     src={`/img/${admin.gambar}.png`}
                     width={80}
                     height={80}
-                    className="rounded-full mr-2"
+                    className="rounded-full mr-2 h-10 w-10 md:h-20 md:w-20"
                   />
-                  <h2>{admin.nama} (Admin)</h2>
+                  <h2 className="text-base md:text-xl">{admin.nama} (Admin)</h2>
                 </div>
               )}
             </li>
@@ -248,11 +275,11 @@ const RuanganPage = ({ slug: initialSlug }) => {
                     <Image
                       alt={`${userData.nama}'s selected image`}
                       src={`/img/${userData.gambar}.png`}
-                      width={80} // Set the width of the image
-                      height={80} // Set the height of the image
-                      className="rounded-full mr-2"
+                      width={80}
+                      height={80}
+                      className="rounded-full mr-2 h-10 w-10 md:h-20 md:w-20"
                     />
-                    <h2>{userData.nama}</h2>
+                    <h2 className="text-base md:text-xl">{userData.nama}</h2>
                     {isAdmin && (
                       <button
                         className="ml-2 bg-red-500 text-white px-2 py-1 rounded"
@@ -267,11 +294,9 @@ const RuanganPage = ({ slug: initialSlug }) => {
             ))}
           </ul>
         </div>
-        <div className="flex flex-col w-3/5 bg-white">
-          <div
-            className="flex-grow text-black p-3 text-xl overflow-y-auto h-32"
-            ref={chatContentRef}
-          >
+        {/* Konten utama */}
+        <div className="flex flex-col flex-grow md:w-3/5 bg-white">
+          <div className="flex-grow px-3 pt-3 text-xl overflow-y-auto h-[34rem] md:overflow-auto">
             {messages.map((message, index) => (
               <div
                 className={`chat ${
@@ -280,18 +305,18 @@ const RuanganPage = ({ slug: initialSlug }) => {
                 key={index}
               >
                 <div className="chat-image avatar">
-                  <div className="w-16 rounded-full">
+                  <div className="w-12 md:w-16 rounded-full">
                     {selectedImage && (
                       <Image
-                      alt="User's selected image"
-                      src={`/img/${
-                        message.sender === userName
-                          ? selectedImage
-                          : message.senderImage
-                      }.png`}
-                      width={64}
-                      height={64}
-                    />
+                        alt="User's selected image"
+                        src={`/img/${
+                          message.sender === userName
+                            ? selectedImage
+                            : message.senderImage
+                        }.png`}
+                        width={64}
+                        height={64}
+                      />
                     )}
                   </div>
                 </div>
@@ -308,9 +333,10 @@ const RuanganPage = ({ slug: initialSlug }) => {
                       : "bg-[#B4D4FF] bg-opacity-50"
                   }`}
                 >
-                  {/* Render each line as a separate paragraph */}
                   {message.text.split("\n").map((line, lineIndex) => (
-                    <p key={lineIndex}>{line}</p>
+                    <p className="text-base md:text-xl" key={lineIndex}>
+                      {line}
+                    </p>
                   ))}
                 </div>
                 <div className="chat-footer opacity-50"></div>
@@ -320,29 +346,27 @@ const RuanganPage = ({ slug: initialSlug }) => {
 
           <div className="p-6 bg-[#86B6F6] rounded-t-3xl flex">
             <textarea
-              className="flex-grow text-md p-2 rounded-md bg-white text-black border-none mr-2 align-middle resize-none"
+              className="flex-grow text-base md:text-xl p-2 rounded-md bg-white text-black border-none mb-2 mr-2 md:mb-0 md:resize-none"
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault(); // Prevents the default behavior of adding a newline
+                  e.preventDefault();
                   sendMessage();
                 }
               }}
               placeholder="Type your message..."
             />
-
-            
-
             <button
-              className="bg-[#176B87] rounded-full p-3 align-middle"
+              className="bg-[#176B87] rounded-full p-3 align-middle mb-2"
               onClick={sendMessage}
             >
-              <PaperAirplaneIcon className="h-8 w-8 text-white align-middle" />
+              <PaperAirplaneIcon className="h-5 w-5 md:h-8 md:w-8 text-white" />
             </button>
           </div>
         </div>
       </div>
+      {/* Konfirmasi modal */}
       <ConfirmationModal
         isOpen={isConfirmationModalOpen}
         onCancel={closeConfirmationModal}
