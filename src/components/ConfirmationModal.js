@@ -4,7 +4,7 @@ const ConfirmationModal = ({ isOpen, onCancel, onConfirm, isAdmin }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center">
+    <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-20 p-5">
       <div className="bg-white p-8 rounded-lg">
         {isAdmin ? (
           <p className="mb-4">

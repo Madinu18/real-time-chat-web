@@ -60,27 +60,6 @@ const RuanganPage = ({ slug: initialSlug }) => {
     setIsAdmin(admin.nama === userName);
   }, [admin, userName]);
 
-  const handleMessages = useCallback(
-    (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        const messagesArray = Object.values(data);
-        setMessages(messagesArray);
-      }
-    },
-    [setMessages]
-  );
-
-  useEffect(() => {
-    const messagesRef = databaseRef.current.ref(`${nomorRuangan}/messages`);
-
-    messagesRef.on("value", handleMessages);
-
-    return () => {
-      messagesRef.off("value", handleMessages);
-    };
-  }, [slug, handleMessages, nomorRuangan, databaseRef]);
-
   const handleListRef = useCallback(
     (snapshot) => {
       if (snapshot.exists()) {
@@ -105,12 +84,63 @@ const RuanganPage = ({ slug: initialSlug }) => {
   useEffect(() => {
     const listRef = databaseRef.current.ref(`${nomorRuangan}/list`);
 
+    const handleListChange = async (snapshot) => {
+      handleListRef(snapshot);
+
+      if (!snapshot.exists()) {
+        window.location.href = "/";
+        return;
+      }
+
+      const updatedList = snapshot.val();
+      const isAdmin = updatedList?.admin?.nama === userName;
+      const isUserStillPresent =
+        !isAdmin &&
+        updatedList?.member?.some((member) => member.nama === userName);
+      console.log(isUserStillPresent);
+
+      if (!isUserStillPresent && !isAdmin) {
+        window.location.href = "/";
+      }
+    };
+
+    listRef.on("value", handleListChange);
+
+    return () => {
+      listRef.off("value", handleListChange);
+    };
+  }, [nomorRuangan, handleListRef, databaseRef, userName]);
+
+  useEffect(() => {
+    const listRef = databaseRef.current.ref(`${nomorRuangan}/list`);
+
     listRef.on("value", handleListRef);
 
     return () => {
       listRef.off("value", handleListRef);
     };
   }, [slug, userName, databaseRef, handleListRef, nomorRuangan]);
+
+  const handleMessages = useCallback(
+    (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        const messagesArray = Object.values(data);
+        setMessages(messagesArray);
+      }
+    },
+    [setMessages]
+  );
+
+  useEffect(() => {
+    const messagesRef = databaseRef.current.ref(`${nomorRuangan}/messages`);
+
+    messagesRef.on("value", handleMessages);
+
+    return () => {
+      messagesRef.off("value", handleMessages);
+    };
+  }, [slug, handleMessages, nomorRuangan, databaseRef]);
 
   const sendMessage = () => {
     if (newMessage.trim() !== "") {
@@ -172,36 +202,6 @@ const RuanganPage = ({ slug: initialSlug }) => {
     }
   };
 
-  useEffect(() => {
-    const listRef = databaseRef.current.ref(`${nomorRuangan}/list`);
-
-    const handleListChange = async (snapshot) => {
-      handleListRef(snapshot);
-
-      if (!snapshot.exists()) {
-        window.location.href = "/";
-        return;
-      }
-
-      const updatedList = snapshot.val();
-      const isAdmin = updatedList?.admin?.nama === userName;
-      const isUserStillPresent =
-        !isAdmin &&
-        updatedList?.member?.some((member) => member.nama === userName);
-      console.log(isUserStillPresent);
-
-      if (!isUserStillPresent && !isAdmin) {
-        window.location.href = "/";
-      }
-    };
-
-    listRef.on("value", handleListChange);
-
-    return () => {
-      listRef.off("value", handleListChange);
-    };
-  }, [nomorRuangan, handleListRef, databaseRef, userName]);
-
   const removeMember = async (memberName) => {
     try {
       const listRef = ruanganRef.child("list/member");
@@ -246,9 +246,9 @@ const RuanganPage = ({ slug: initialSlug }) => {
       <div className="flex flex-col md:flex-row h-full">
         {/* Sidebar */}
         <div
-          className={`md:border-r md:border-[#86B6F6] md:w-2/5 bg-[#EEF5FF] text-black text-xl ${
+          className={`h-dvh md:border-r md:border-[#86B6F6] md:w-2/5 bg-[#EEF5FF] text-black text-xl ${
             navbarOpen
-              ? "absolute inset-y-0 left-0 transform translate-x-0 transition-transform z-50"
+              ? "absolute inset-y-0 left-0 transform translate-x-0 transition-transform z-10"
               : "hidden"
           } md:inline md:z-40`}
           style={{ marginTop: navbarOpen ? "76px" : "0" }}

@@ -6,6 +6,8 @@ import RenderImage from "@/components/RenderImage";
 import Modal from "react-modal";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
+import { toast, ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 const IndexPage = () => {
   const [nama, setNama] = useState("");
@@ -25,6 +27,15 @@ const IndexPage = () => {
   };
 
   const buatRuangan = async () => {
+    if (!nama){
+      toast.error("Anda belum memasukan nama");
+      return;
+    }
+    if (!selectedImage) {
+      toast.error("Anda belum memilih gambar");
+      return;
+    }
+
     try {
       const nomor_random = Math.floor(Math.random() * 1000).toString();
       const database = firebase.database();
@@ -51,14 +62,60 @@ const IndexPage = () => {
     }
   };
 
+  const checkNamaExist = async (nama, kodeRuangan) => {
+    try {
+      const database = firebase.database();
+      
+      // Cek apakah nama ada di ruangan sebagai admin
+      const ruanganAdminRef = database.ref(`${kodeRuangan}/list/admin`);
+      const adminSnapshot = await ruanganAdminRef.once("value");
+      if (adminSnapshot.exists() && adminSnapshot.child("nama").val() === nama) {
+        return true; // Nama sudah ada sebagai admin
+      }
+  
+      // Cek apakah nama ada di ruangan sebagai member
+      const ruanganMemberRef = database.ref(`${kodeRuangan}/list/member`);
+      const memberSnapshot = await ruanganMemberRef.orderByChild("nama").equalTo(nama).once("value");
+      if (memberSnapshot.exists()) {
+        return true; // Nama sudah ada sebagai member
+      }
+  
+      return false; // Nama tidak ada di ruangan
+    } catch (error) {
+      console.error("Error checking nama exist:", error.message);
+      return false;
+    }
+  };
+
   const masukRuangan = async () => {
+    
+    if (!nama){
+      toast.error("Anda belum memasukan nama");
+      return;
+    }
+    if (!kodeRuangan) {
+      toast.error("Anda belum memasukan kode ruangan");
+      return;
+    }
+    if (!selectedImage) {
+      toast.error("Anda belum memilih gambar");
+      return;
+    }
+
+    const namaExists = await checkNamaExist(nama, kodeRuangan);
+
+    if (namaExists) {
+      toast.error("Maaf, nama yang Anda inputkan sudah ada di ruangan");
+      return;
+    }
+
     try {
       const database = firebase.database();
       const ruanganRef = database.ref(`${kodeRuangan}`);
 
       const ruanganSnapshot = await ruanganRef.once("value");
       if (!ruanganSnapshot.exists()) {
-        console.log("Ruangan tidak ditemukan, mungkin implementasinya disini");
+        toast.error("Ruangan tidak tersedia");
         return;
       }
 
@@ -194,6 +251,7 @@ const IndexPage = () => {
           </button>
         </div>
       </div>
+      <ToastContainer theme="colored"/>
     </div>
   );
 };
