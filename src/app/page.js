@@ -152,7 +152,7 @@ const IndexPage = () => {
   return (
     <div className="bg-[#EEF5FF] px-5 md:p-14 flex flex-col items-center justify-center h-dvh">
       <div className="bg-[#86B6F6] w-full md:w-[50rem] mx-auto flex flex-col md:flex-row p-4 md:p-14 rounded-xl justify-center items-center">
-        <div className="mx-auto hidden md:flex">
+        <div className="mx-auto hidden md:flex md:flex-col">
           <div className="grid grid-cols-4 gap-4 mb-4">
             {[...Array(20)].map((_, index) => (
               <RenderImage
@@ -163,6 +163,7 @@ const IndexPage = () => {
               />
             ))}
           </div>
+          <p className="text-center text-blue-200"><a className="text-slate-500 " href="https://www.freepik.com/free-vector/bundle-with-set-face-business-people_6196665" target="_blank">Image by studiogstock</a> on Freepik</p>
         </div>
         <div className="flex flex-col mx-auto mt-4 md:mt-0 md:ml-8">
           <h1 className="text-center md:text-left text-xl md:text-3xl font-extrabold text-white mb-6">
@@ -201,7 +202,7 @@ const IndexPage = () => {
             className="w-full h-full px-10 flex items-center justify-center bg-[#2a9df4] bg-opacity-30"
           >
             <div className="flex flex-col justify-center bg-[#2a9df4] p-8 rounded-lg relative mx-auto w-96">
-              <div className="grid grid-cols-4 gap-4 mb-7 justify-items-center">
+              <div className="grid grid-cols-4 gap-4 mb-2 justify-items-center">
                 {[...Array(20)].map((_, index) => (
                   <RenderImage
                     key={index}
@@ -211,6 +212,7 @@ const IndexPage = () => {
                   />
                 ))}
               </div>
+              <p className="text-center text-blue-200 mb-2"><a className="text-slate-500 " href="https://www.freepik.com/free-vector/bundle-with-set-face-business-people_6196665" target="_blank">Image by studiogstock</a> on Freepik</p>
               <button
                 className="text-xl bg-blue-500 border-2 border-black p-2 rounded-lg text-white font-bold hover:bg-blue-700"
                 onClick={closeModal}
