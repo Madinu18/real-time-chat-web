@@ -1,11 +1,11 @@
 import React from "react";
 
-const ConfirmationModal = ({ isOpen, onCancel, onConfirm, isAdmin }) => {
+const ConfirmationModal = ({ isOpen, onCancel, onConfirm, isAdmin, isDarkMode }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-20 p-5">
-      <div className="bg-white p-8 rounded-lg">
+    <div className={`fixed inset-0 bg-opacity-75 flex items-center justify-center z-20 p-5 ${isDarkMode ? "bg-gray-700" : "bg-gray-500"}`}>
+      <div className={` p-8 rounded-lg ${isDarkMode ? "bg-[#272829] text-white" : "bg-white text-black"}`}>
         {isAdmin ? (
           <p className="mb-4">
             Semua member akan otomatis keluar jika anda keluar ruangan. Apakah
