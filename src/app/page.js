@@ -8,7 +8,6 @@ import { PlusIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import cookie from 'js-cookie';
 
 const IndexPage = () => {
   const [nama, setNama] = useState("");
@@ -25,12 +24,17 @@ const IndexPage = () => {
   const PAGE_KEY = "isDarkMode";
 
   const getPageTheme = () => {
-    const storedValue = cookie.get(PAGE_KEY);
-    return storedValue ? JSON.parse(storedValue) : false;
+    if (typeof window !== 'undefined') { // Pastikan untuk memeriksa apakah window didefinisikan sebelum menggunakan localStorage
+      const storedValue = localStorage.getItem(PAGE_KEY);
+      return storedValue ? JSON.parse(storedValue) : false;
+    }
+    return false;
   };
 
   const setPageTheme = (value) => {
-    cookie.set(PAGE_KEY, JSON.stringify(value), { expires: 365 }); // Menggunakan cookie.set() untuk menyimpan nilai tema dengan masa berlaku 1 tahun (365 hari)
+    if (typeof window !== 'undefined') { // Pastikan untuk memeriksa apakah window didefinisikan sebelum menggunakan localStorage
+      localStorage.setItem(PAGE_KEY, JSON.stringify(value));
+    }
   };
 
   const [isDarkMode, setIsDarkMode] = useState(getPageTheme());

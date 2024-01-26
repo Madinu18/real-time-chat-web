@@ -11,7 +11,6 @@ import {
 import Image from "next/image";
 import ConfirmationModal from "./ConfirmationModal";
 import EmojiPicker from "emoji-picker-react";
-import cookie from 'js-cookie';
 
 // Component
 const RuanganPage = ({ slug: initialSlug }) => {
@@ -37,12 +36,17 @@ const RuanganPage = ({ slug: initialSlug }) => {
   const PAGE_KEY = "isDarkMode";
 
   const getPageTheme = () => {
-    const storedValue = cookie.get(PAGE_KEY);
-    return storedValue ? JSON.parse(storedValue) : false;
+    if (typeof window !== 'undefined') { // Pastikan untuk memeriksa apakah window didefinisikan sebelum menggunakan localStorage
+      const storedValue = localStorage.getItem(PAGE_KEY);
+      return storedValue ? JSON.parse(storedValue) : false;
+    }
+    return false;
   };
 
   const setPageTheme = (value) => {
-    cookie.set(PAGE_KEY, JSON.stringify(value), { expires: 365 });
+    if (typeof window !== 'undefined') { // Pastikan untuk memeriksa apakah window didefinisikan sebelum menggunakan localStorage
+      localStorage.setItem(PAGE_KEY, JSON.stringify(value));
+    }
   };
 
   const [isDarkMode, setIsDarkMode] = useState(getPageTheme());
