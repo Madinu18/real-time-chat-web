@@ -36,7 +36,8 @@ const RuanganPage = ({ slug: initialSlug }) => {
   const PAGE_KEY = "isDarkMode";
 
   const getPageTheme = () => {
-    if (typeof window !== 'undefined') { // Pastikan untuk memeriksa apakah window didefinisikan sebelum menggunakan localStorage
+    if (typeof window !== "undefined") {
+      // Pastikan untuk memeriksa apakah window didefinisikan sebelum menggunakan localStorage
       const storedValue = localStorage.getItem(PAGE_KEY);
       return storedValue ? JSON.parse(storedValue) : false;
     }
@@ -44,7 +45,8 @@ const RuanganPage = ({ slug: initialSlug }) => {
   };
 
   const setPageTheme = (value) => {
-    if (typeof window !== 'undefined') { // Pastikan untuk memeriksa apakah window didefinisikan sebelum menggunakan localStorage
+    if (typeof window !== "undefined") {
+      // Pastikan untuk memeriksa apakah window didefinisikan sebelum menggunakan localStorage
       localStorage.setItem(PAGE_KEY, JSON.stringify(value));
     }
   };
@@ -305,7 +307,7 @@ const RuanganPage = ({ slug: initialSlug }) => {
           )}
         </button>
         <button
-          className="absolute top-4 right-3 md:hidden px-2 md:px-3"
+          className="absolute top-4 right-1 md:hidden px-2 md:px-3"
           onClick={toggleDarkMode}
         >
           {isDarkMode ? (
@@ -481,7 +483,7 @@ const RuanganPage = ({ slug: initialSlug }) => {
                 😀
               </button>
               <textarea
-                className="text-base w-full md:text-xl pt-3 rounded-r-full bg-white text-black border-none mb-2 mr-2 md:mb-0 md:resize-none focus:outline-none"
+                className="text-base w-full md:text-xl pt-4 md:pt-3 rounded-r-full bg-white text-black border-none mb-2 mr-2 md:mb-0 md:resize-none focus:outline-none"
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
                 onKeyDown={(e) => {
@@ -494,7 +496,7 @@ const RuanganPage = ({ slug: initialSlug }) => {
               />
             </div>
             <button
-              className="bg-[#176B87] rounded-full p-3 align-middle h-15 w-15 justify-center"
+              className={`rounded-full p-3 align-middle h-15 w-15 justify-center ${isDarkMode ? "bg-[#261141]" : "bg-[#176B87]"}`}
               onClick={sendMessage}
             >
               <PaperAirplaneIcon className="h-8 w-8 text-white" />
