@@ -11,6 +11,7 @@ import {
 import Image from "next/image";
 import ConfirmationModal from "./ConfirmationModal";
 import EmojiPicker from "emoji-picker-react";
+import cookie from 'js-cookie';
 
 // Component
 const RuanganPage = ({ slug: initialSlug }) => {
@@ -36,12 +37,12 @@ const RuanganPage = ({ slug: initialSlug }) => {
   const PAGE_KEY = "isDarkMode";
 
   const getPageTheme = () => {
-    const storedValue = localStorage.getItem(PAGE_KEY);
+    const storedValue = cookie.get(PAGE_KEY);
     return storedValue ? JSON.parse(storedValue) : false;
   };
 
   const setPageTheme = (value) => {
-    localStorage.setItem(PAGE_KEY, JSON.stringify(value));
+    cookie.set(PAGE_KEY, JSON.stringify(value), { expires: 365 });
   };
 
   const [isDarkMode, setIsDarkMode] = useState(getPageTheme());
