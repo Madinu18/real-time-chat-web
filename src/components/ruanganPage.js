@@ -182,7 +182,23 @@ const RuanganPage = ({ slug: initialSlug }) => {
   }, [slug, handleMessages, nomorRuangan, databaseRef]);
 
   const sendMessage = () => {
-    if (newMessage.trim() !== "") {
+    let messageToSend = newMessage;
+
+    // Tambahkan newline setiap 23 karakter tanpa memperhitungkan karakter \n
+    const maxLength = 23;
+    let characterCount = 0;
+    for (let i = 0; i < messageToSend.length; i++) {
+      if (messageToSend[i] !== "\n") {
+        characterCount++;
+      }
+      if (characterCount >= maxLength) {
+        messageToSend =
+          messageToSend.slice(0, i) + "\n" + messageToSend.slice(i);
+        characterCount = 0;
+      }
+    }
+
+    if (messageToSend.trim() !== "") {
       const messagesRef = database.ref(`${nomorRuangan}/messages`);
       const timestamp = firebase.database.ServerValue.TIMESTAMP;
 
@@ -195,7 +211,7 @@ const RuanganPage = ({ slug: initialSlug }) => {
             messagesRef.push({
               sender: userName,
               senderImage: selectedImage,
-              text: newMessage,
+              text: messageToSend,
               timestamp,
             });
 
@@ -496,7 +512,9 @@ const RuanganPage = ({ slug: initialSlug }) => {
               />
             </div>
             <button
-              className={`rounded-full p-3 align-middle h-15 w-15 justify-center ${isDarkMode ? "bg-[#261141]" : "bg-[#176B87]"}`}
+              className={`rounded-full p-3 align-middle h-15 w-15 justify-center ${
+                isDarkMode ? "bg-[#261141]" : "bg-[#176B87]"
+              }`}
               onClick={sendMessage}
             >
               <PaperAirplaneIcon className="h-8 w-8 text-white" />
